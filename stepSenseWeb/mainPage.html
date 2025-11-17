@@ -15,10 +15,19 @@
      crossorigin=""></script>
 
      <style>
+         h1 {
+            text-align: center;
+        }
         #map {
             height: 650px;
             flex: 2;
         }
+        .popup-image{
+            max-width: 200px;
+            height: auto;
+        }
+        
+
      </style>
 
     
@@ -27,21 +36,61 @@
 <body>
 
     <h1>StepSense</h1>
-
+ <div class="container">
     <!-- Map-->
         <div id="map"></div>
+
+        </div>
 </body>
 
 <script>
 
 let map;
+let cityMarker = null;
 
 
     map = L.map('map').setView([8.3603, 124.8684], 17);
 
     const openStreetMap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19
+        maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
+
+    const markerGroups = {};
+
+    fetch(mapDataUrl)
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(pin => {
+                const type = pin.locationType || "Other";
+
+                if (!markerGroups[type]) {
+                    markerGroups[type] = L.layerGroup();
+                }
+
+                const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+                const img = `<img src="${pin.img}" class="popup-image">`;
+
+                marker.bindPopup(`${img}<br><b>${pin.title}</b><br>${pin.description}<br>${pin.locationType}`);
+
+                markerGroups[type].addLayer(marker);
+            });
+
+            Object.values(markerGroups).forEach(group => group.addTo(map));
+
+            L.control.layers(
+                {
+                    "OpenStreetMap": openStreetMap
+                     },
+                markerGroups,
+                { collapsed: false }
+            ).addTo(map);
+        })
+        .catch(err => console.error("Error loading JSON", err));
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    initMap("campus-map.json");
+});
 
 
 
