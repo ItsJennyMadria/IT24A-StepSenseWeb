@@ -37,14 +37,20 @@
 
     <h1>StepSense</h1>
  <div class="container">
-    <!-- Map-->
+    <!--Weather Card-->
+    <div id="weatherCard">
+        <button onclick="getWeather()">Check Weather</button>
+        <div id="weatherResult"></div>
+    </div>
+
+    <!-- Map Code-->
         <div id="map"></div>
 
         </div>
 </body>
 
 <script>
-
+// -------------MAP SECTION----------->
 let map;
 let cityMarker = null;
 
@@ -52,7 +58,7 @@ let cityMarker = null;
     map = L.map('map').setView([8.3603, 124.8684], 17);
 
     const openStreetMap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        maxZoom: 19, attribution: '&copy;openStreetMap contributors'
     }).addTo(map);
 
     const satellite = L.tileLayer(
@@ -101,7 +107,58 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+//----------------Weather  Code------------------>
+const apiKey = "71f1476d46775282b461831e0cef5202";
+const geocodeUrl = "https://api.openweathermap.org/geo/1.0/direct";
 
+    async function checkWeather(){
+        const city = prompt("Enter the city you're at: ");
+        if (!city) return alert ("No city entered.");
+        
+        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+        try{
+            const response = await fetch(weatherUrl);
+            if(!response.ok) throw new Error("City not found.");
+            const data = await response.json();
+
+            const walkDecision = evaluateWalk(data);
+
+              document.getElementById("weatherResult").innerHTML = `
+            <h2>${data.name}, ${data.sys.country}</h2>
+            <p><b>Temperature:</b> ${data.main.temp}°C</p>
+            <p><b>Weather:</b> ${data.weather[0].description}</p>
+            <p><b>Humidity:</b> ${data.main.humidity}%</p>
+            <p><b>Wind:</b> ${data.wind.speed} m/s</p>
+
+            <hr>
+            <h3>Recommendation</h3>
+            <p style="font-weight:bold; color:${walkDecision.color};">
+                ${walkDecision.message}
+            </p>
+        `;
+
+        const geoResponse = await fetch(`${geocodeUrl}?q=${city}&limit=1&appid=${apiKey}`);
+        const geoData = await geoResponse.json();
+        if (geoData.length === 0) return alert("Location not found.");
+
+        const lat = geoData[0].lat;
+        const lon = geoData[0].lon;
+
+        if (cityMarker) map.removeLayer(cityMarker);
+
+        cityMarker = L.marker([lat, lon]).addTo(map)
+            .bindPopup(`<b>${city}</b><br>You are here!`)
+            .openPopup();
+
+        map.setView([lat, lon], 10);
+
+    } catch (error) {
+        alert("Error: " + error.message);
+    }
+}
+
+        
 </script>
 
 
