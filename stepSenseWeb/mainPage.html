@@ -27,8 +27,25 @@
 <body>
 
     <h1>StepSense</h1>
-    
+
     <!-- Map-->
         <div id="map"></div>
 </body>
+
+<script>
+
+let map;
+
+
+    map = L.map('map').setView([8.3603, 124.8684], 17);
+
+    const openStreetMap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19
+    }).addTo(map);
+
+
+
+</script>
+
+
 </html>
