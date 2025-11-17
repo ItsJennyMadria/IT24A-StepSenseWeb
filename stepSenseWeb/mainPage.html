@@ -14,58 +14,89 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
      crossorigin=""></script>
 
-     <style>
-         h1 {
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #e9f2ff;
+        }
+
+        h1 {
             text-align: center;
         }
+
+        .container {
+            display: flex;
+            gap: 20px;
+        }
+
+        /* CARD LEFT, MAP RIGHT */
+        #weatherCard {
+            flex: 1;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            height: fit-content;
+        }
+
         #map {
             height: 650px;
             flex: 2;
         }
-        .popup-image{
+
+        .popup-image {
             max-width: 200px;
             height: auto;
         }
-        
 
-     </style>
+        button {
+            padding: 10px 20px;
+            color: rgb(0, 0, 0);
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
 
-    
+       
+    </style>
 </head>
 
 <body>
 
     <h1>StepSense</h1>
- <div class="container">
-    <!--Weather Card-->
-    <div id="weatherCard">
-        <button onclick="getWeather()">Check Weather</button>
-        <div id="weatherResult"></div>
-    </div>
 
-    <!-- Map Code-->
+    <div class="container">
+
+       <!-- CARD FIRST (LEFT SIDE) -->
+        <div id="weatherCard">
+            <button onclick="getWeather()">Get Weather</button>
+            <div id="weatherResult"></div>
+        </div>
+
+        <!-- MAP SECOND (RIGHT SIDE) -->
         <div id="map"></div>
 
-        </div>
-</body>
+    </div>
 
 <script>
-// -------------MAP SECTION----------->
+
+// ---------------------- MAP SECTION ---------------------->
+
 let map;
 let cityMarker = null;
 
-
+function initMap(mapDataUrl) {
     map = L.map('map').setView([8.3603, 124.8684], 17);
 
     const openStreetMap = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19, attribution: '&copy;openStreetMap contributors'
+        maxZoom: 19
     }).addTo(map);
 
     const satellite = L.tileLayer(
         'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-        { attribution: 'Tiles © Esri- Source: Esri, Maxar, Earthstar Geographics, GIS User Community' }
+        { attribution: 'Tiles © Esri' }
     );
-
 
     const markerGroups = {};
 
@@ -81,7 +112,6 @@ let cityMarker = null;
 
                 const marker = L.marker([pin.lat, pin.lng]).addTo(map);
                 const img = `<img src="${pin.img}" class="popup-image">`;
-                
 
                 marker.bindPopup(`${img}<br><b>${pin.title}</b><br>${pin.description}<br>${pin.locationType}`);
 
@@ -94,37 +124,40 @@ let cityMarker = null;
                 {
                     "OpenStreetMap": openStreetMap,
                     "Satellite": satellite
-                     },
+                },
                 markerGroups,
                 { collapsed: false }
             ).addTo(map);
         })
         .catch(err => console.error("Error loading JSON", err));
-
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     initMap("campus-map.json");
 });
 
 
-//----------------Weather  Code------------------>
+//---------------------- WEATHER SECTION ---------------------->
+
 const apiKey = "71f1476d46775282b461831e0cef5202";
 const geocodeUrl = "https://api.openweathermap.org/geo/1.0/direct";
 
-    async function checkWeather(){
-        const city = prompt("Enter the city you're at: ");
-        if (!city) return alert ("No city entered.");
-        
-        const weatherUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+async function getWeather() {
+    const city = prompt("Enter the city you're at: ");
+    if (!city) return alert("No city entered.");
 
-        try{
-            const response = await fetch(weatherUrl);
-            if(!response.ok) throw new Error("City not found.");
-            const data = await response.json();
+    const weatherUrl = 
+        `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
 
-            const walkDecision = evaluateWalk(data);
+    try {
+        const response = await fetch(weatherUrl);
+        if (!response.ok) throw new Error("City not found.");
+        const data = await response.json();
 
-              document.getElementById("weatherResult").innerHTML = `
+
+      
+
+        document.getElementById("weatherResult").innerHTML = `
             <h2>${data.name}, ${data.sys.country}</h2>
             <p><b>Temperature:</b> ${data.main.temp}°C</p>
             <p><b>Weather:</b> ${data.weather[0].description}</p>
@@ -132,10 +165,8 @@ const geocodeUrl = "https://api.openweathermap.org/geo/1.0/direct";
             <p><b>Wind:</b> ${data.wind.speed} m/s</p>
 
             <hr>
-            <h3>Recommendation</h3>
-            <p style="font-weight:bold; color:${walkDecision.color};">
-                ${walkDecision.message}
-            </p>
+
+         
         `;
 
         const geoResponse = await fetch(`${geocodeUrl}?q=${city}&limit=1&appid=${apiKey}`);
@@ -158,8 +189,7 @@ const geocodeUrl = "https://api.openweathermap.org/geo/1.0/direct";
     }
 }
 
-        
 </script>
 
-
+</body>
 </html>
