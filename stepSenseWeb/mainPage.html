@@ -55,6 +55,12 @@ let cityMarker = null;
         maxZoom: 19, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     }).addTo(map);
 
+    const satellite = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        { attribution: 'Tiles © Esri- Source: Esri, Maxar, Earthstar Geographics, GIS User Community' }
+    );
+
+
     const markerGroups = {};
 
     fetch(mapDataUrl)
@@ -69,6 +75,7 @@ let cityMarker = null;
 
                 const marker = L.marker([pin.lat, pin.lng]).addTo(map);
                 const img = `<img src="${pin.img}" class="popup-image">`;
+                
 
                 marker.bindPopup(`${img}<br><b>${pin.title}</b><br>${pin.description}<br>${pin.locationType}`);
 
@@ -79,7 +86,8 @@ let cityMarker = null;
 
             L.control.layers(
                 {
-                    "OpenStreetMap": openStreetMap
+                    "OpenStreetMap": openStreetMap,
+                    "Satellite": satellite
                      },
                 markerGroups,
                 { collapsed: false }
