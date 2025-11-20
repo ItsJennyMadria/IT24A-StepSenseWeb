@@ -19,14 +19,23 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background: #e9f2ff;
+           background: linear-gradient(to bottom right, #fff, #64ffb7);
+           text-align: center;
         }
 
         h1 {
-            text-align: center;
-            padding: 20px;
+            
+            color: #057f3e;
+            padding: 12px;
         }
-
+    
+        .subtitle{
+        text-align: center;
+    margin-top: 10px; 
+    font-size: 16px;  
+    color: #000; 
+    padding-bottom: 7px;
+        }
         .container {
             display: flex;
             gap: 20px;
@@ -38,7 +47,7 @@
             background: #ffffff;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
             height: fit-content;
              display: flex;
     flex-direction: column;
@@ -49,6 +58,7 @@
             height: 580px;
             flex: 2;
             border-radius: 2%;
+             box-shadow: 0 4px 12px rgba(2, 43, 4, 0.4);
         }
 
         .popup-image {
@@ -58,7 +68,7 @@
 
         button {
             padding: 10px 20px;
-            background-color: #36ab6d;
+            background-color: #057f3e;
             border: none;
             color: rgb(255, 255, 255);
             border-radius: 5px;
@@ -66,24 +76,33 @@
             margin-bottom: 10px;
             align-items: center;
            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(46, 125, 50, 0.4);
+            align-self: center;
         }
 
         button:hover {
             background: #057f3e;
             transform: scale(1.05);
         }
+        
 
     </style>
 </head>
 
 <body>
 
-    <h1>StepSense</h1>
+    <h1>StepSense Co.</h1>
+    <p class="subtitle">Check the weather… and decide if it’s an adventure day!<p>
 
     <div class="container">
 
+
+        
+
         <!-- CARD FIRST (LEFT SIDE) -->
         <div id="weatherCard">
+          
+           
             <button onclick="getWeather()">Get Weather</button>
             <div id="weatherResult"></div>
         </div>
