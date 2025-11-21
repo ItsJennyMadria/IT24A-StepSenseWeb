@@ -20,13 +20,34 @@
             margin: 0;
             padding: 20px;
            background: linear-gradient(to bottom right, #fff, #64ffb7);
-           text-align: center;
+          
         }
+         header .company div {
+        font-size: 25px;
+        line-height: 1.2;
+        color: #0f660f;
+        font-weight: bold;
+        
+    }
+    .navbar {
+    display: flex;
+    padding: 1px 20px;
+
+  }
+  .divider {
+    border: none;
+    height: 2px;
+    background-color: #057f3e;
+    margin: 20px 0;
+    border-radius: 2px;
+}
+
 
         h1 {
             
             color: #057f3e;
-            padding: 8px;
+            text-align: center;
+          
         }
     
         .subtitle{
@@ -35,6 +56,7 @@
     font-size: 16px;  
     color: #000; 
     padding-bottom: 7px;
+    
         }
         .container {
             display: flex;
@@ -55,7 +77,9 @@
         }
 
         #map {
-            height: 575px;
+            padding: 13px;
+            height: 610px;
+            width: 50px;
             flex: 2;
             border-radius: 2%;
              box-shadow: 0 4px 12px rgba(2, 43, 4, 0.4);
@@ -90,25 +114,34 @@
 </head>
 
 <body>
+    <header> 
 
-    <h1>StepSense Co.</h1>
-    <p class="subtitle">Check the weather… and decide if it’s an adventure day!<p>
+        <div class="company">
+            <div>StepSense Co.</div>
+        </div>
+    
+<nav class="navbar"></nav>
+    </header>
+
+    <hr class="divider">
 
     <div class="container">
 
 
-       //map and weather card not final yet 
 
-        <!-- CARD FIRST (LEFT SIDE) -->
+        <!-- MAP FIRST (LEFT SIDE) -->
+        <div id="map"></div>
+
+        <!-- WEATHER CARD SECOND (RIGHT SIDE) -->
+        
         <div id="weatherCard">
           
-           
+           <h1>StepSense</h1>
+    
+    <p class="subtitle">Check the weather… and decide if it’s an adventure day!<p>
             <button onclick="getWeather()">Get Weather</button>
             <div id="weatherResult"></div>
         </div>
-
-        <!-- MAP SECOND (RIGHT SIDE) -->
-        <div id="map"></div>
 
     </div>
 
@@ -190,6 +223,7 @@
 
 
                 document.getElementById("weatherResult").innerHTML = `
+                 <div style="text-align: center;">
             <h2>${data.name}, ${data.sys.country}</h2>
             <p><b>Temperature:</b> ${data.main.temp}°C</p>
             <p><b>Weather:</b> ${data.weather[0].description}</p>
@@ -198,7 +232,7 @@
 
             <hr>
 
-          
+          </div>
          
         `;
 
