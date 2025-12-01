@@ -14,24 +14,24 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-         <link rel="stylesheet" href="style.css">
-  
+    <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
-    
+
 
     <header>
-    <nav class="navbar">
-        <div class="company">
-    <img src="assets/logo.png" alt="StepSense Logo" class="logo">
-    StepSense Co.
-</div>
-    </nav>
-</header>
+        <nav class="navbar">
+            <div class="company">
+                <img src="assets/logo.png" alt="StepSense Logo" class="logo">
+                StepSense Co.
+            </div>
+        </nav>
+    </header>
 
 
-  
+
 
 
     <div class="container">
@@ -42,13 +42,14 @@
         <div id="map"></div>
 
         <!-- WEATHER CARD SECOND (RIGHT SIDE) -->
-        
+
         <div id="weatherCard">
-          
-           <h1>StepSense</h1>
-    
-    <p class="subtitle">Check the weather… and decide if it’s an adventure day!<p>
-            <button onclick="getWeather()">Get Weather</button>
+
+            <h1>StepSense</h1>
+
+            <p class="subtitle">Check the weather… and decide if it’s an adventure day!
+            <p>
+                <button onclick="getWeather()">Get Weather</button>
             <div id="weatherResult"></div>
         </div>
 
@@ -65,10 +66,10 @@
             map = L.map('map').setView([12.489382905214779, 123.06204968450204], 5);
 
 
-           const satellite = L.tileLayer(
-    'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-    { attribution: 'Tiles (c) Esri - Source: Esri, Maxar, Earthstar Geographics, GIS User Community' }
-);
+            const satellite = L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                { attribution: 'Tiles (c) Esri - Source: Esri, Maxar, Earthstar Geographics, GIS User Community' }
+            );
 
 
             satellite.addTo(map);
@@ -164,10 +165,38 @@
                 alert("Error: " + error.message);
             }
         }
-       
-
 
     </script>
+
+    <div class="container">
+        <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
+            <div class="col-md-4 d-flex align-items-center">
+                <a href="" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" aria-label="Bootstrap">
+                    <svg class="bi" width="30" height="24" aria-hidden="true">
+                        <use xlink:href="#instagram"></use>
+                    </svg>
+                </a>
+                <span class="mb-3 mb-md-0 text-body-secondary">© 2025 StepSense Co., Inc</span>
+            </div>
+            <ul class="nav col-md-4 justify-content-end list-unstyled d-flex">
+                <li class="ms-3">
+                    <a class="text-body-secondary" href="#" aria-label="Instagram">
+                        <svg class="bi" width="24" aria-hidden="true">
+                            <use xlink:href="#instagram"></use>
+                        </svg>
+                    </a>
+                </li>
+                <li class="ms-3">
+                    <a class="text-body-secondary" href="#" aria-label="Facebook">
+                        <svg class="bi" width="24" height="24">
+                            <use xlink:href="#facebook"></use>
+                        </svg>
+                    </a>
+                </li>
+          </ul>
+        </footer>
+
+    </div>
 
 </body>
 
