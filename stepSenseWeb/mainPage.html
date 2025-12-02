@@ -117,6 +117,24 @@
         const apiKey = "71f1476d46775282b461831e0cef5202";
         const geocodeUrl = "https://api.openweathermap.org/geo/1.0/direct";
 
+        function isGoodForRunning(data) {
+    const temp = data.main.temp;
+    const wind = data.wind.speed;
+    const humidity = data.main.humidity;
+    const condition = (data.weather && data.weather[0] && data.weather[0].main) ? data.weather[0].main.toLowerCase() : "";
+
+    if (condition.includes("storm") || condition.includes("rain") || condition.includes("thunder")) {
+        return "Not Safe: Weather conditions are not ideal for running.";
+    }
+
+    if (temp > 32) return "It's really hot right now — maybe wait a bit before heading out.";
+    if (temp < 10) return "It’s chilly outside — it might not be ideal for a walk or run.";
+    if (wind > 10) return "Pretty windy out there — outdoor plans may feel uncomfortable.";
+    if (humidity > 85) return "The air is very humid — expect a bit of discomfort outside.";
+
+    return "Lovely weather! A nice time to step out for a walk or run.";
+}
+
         async function getWeather() {
             const city = prompt("Enter the city you're at: ");
             if (!city) return alert("No city entered.");
