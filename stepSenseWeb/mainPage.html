@@ -47,11 +47,12 @@
 
             <h1>StepSense</h1>
 
-            <p class="subtitle">Check the weather… and decide if it’s an adventure day!
-            <p>
-                <button onclick="getWeather()">Get Weather</button>
-            <div id="weatherResult"></div>
-        </div>
+            <p style="text-align: center;"><em>Check the weather and decide if it’s an adventure day!</em></p>
+            <div id="weatherContainer" style="text-align:center;">
+    <div id="weatherResult"></div>
+    <button id="getWeatherBtn" onclick="getWeather()">Get Weather</button>
+</div>
+</div>
 
     </div>
 
@@ -118,22 +119,23 @@
         const geocodeUrl = "https://api.openweathermap.org/geo/1.0/direct";
 
         function isGoodForRunning(data) {
-    const temp = data.main.temp;
-    const wind = data.wind.speed;
-    const humidity = data.main.humidity;
-    const condition = (data.weather && data.weather[0] && data.weather[0].main) ? data.weather[0].main.toLowerCase() : "";
+            const temp = data.main.temp;
+            const wind = data.wind.speed;
+            const humidity = data.main.humidity;
+            const condition = (data.weather && data.weather[0] && data.weather[0].main) ? data.weather[0].main.toLowerCase() : "";
 
-    if (condition.includes("storm") || condition.includes("rain") || condition.includes("thunder")) {
-        return "Not Safe: Weather conditions are not ideal for running.";
-    }
+            if (condition.includes("storm") || condition.includes("rain") || condition.includes("thunder")) {
+                return "Not Safe: Weather conditions are not ideal for running.";
+            }
 
-    if (temp > 32) return "It's really hot right now — maybe wait a bit before heading out.";
-    if (temp < 10) return "It’s chilly outside — it might not be ideal for a walk or run.";
-    if (wind > 10) return "Pretty windy out there — outdoor plans may feel uncomfortable.";
-    if (humidity > 85) return "The air is very humid — expect a bit of discomfort outside.";
+            if (temp > 32) return "It's really hot right now — maybe wait a bit before heading out.";
+            if (temp < 10) return "It’s chilly outside — it might not be ideal for a walk or run.";
+            if (wind > 10) return "Pretty windy out there — outdoor plans may feel uncomfortable.";
+            if (humidity > 85) return "The air is very humid — expect a bit of discomfort outside.";
 
-    return "Lovely weather! A nice time to step out for a walk or run.";
-}
+            return "Lovely weather! A nice time to step out for a walk or run.";
+        }
+
 
         async function getWeather() {
             const city = prompt("Enter the city you're at: ");
@@ -148,18 +150,17 @@
                 const data = await response.json();
 
                 document.getElementById("weatherResult").innerHTML = `
-                 <div style="text-align: center;">
             <h2>${data.name}, ${data.sys.country}</h2>
             <p><b>Temperature:</b> ${data.main.temp}°C</p>
             <p><b>Weather:</b> ${data.weather[0].description}</p>
             <p><b>Humidity:</b> ${data.main.humidity}%</p>
             <p><b>Wind:</b> ${data.wind.speed} m/s</p>
-
             <hr>
-
-          </div>
-         
+            <h3>${isGoodForRunning(data)}</h3>
         `;
+               const container = document.getElementById("weatherContainer");
+        const btn = document.getElementById("getWeatherBtn");
+        container.appendChild(btn);
 
                 const geoResponse = await fetch(`${geocodeUrl}?q=${city}&limit=1&appid=${apiKey}`);
                 const geoData = await geoResponse.json();
@@ -179,6 +180,7 @@
             } catch (error) {
                 alert("Error: " + error.message);
             }
+
         }
 
     </script>
@@ -186,7 +188,8 @@
     <div class="container">
         <footer class="d-flex flex-wrap justify-content-between align-items-center py-3 my-4 border-top">
             <div class="col-md-4 d-flex align-items-center">
-                <a href="" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1" aria-label="Bootstrap">
+                <a href="" class="mb-3 me-2 mb-md-0 text-body-secondary text-decoration-none lh-1"
+                    aria-label="Bootstrap">
                     <svg class="bi" width="30" height="24" aria-hidden="true">
                         <use xlink:href="#instagram"></use>
                     </svg>
@@ -208,7 +211,7 @@
                         </svg>
                     </a>
                 </li>
-          </ul>
+            </ul>
         </footer>
 
     </div>
