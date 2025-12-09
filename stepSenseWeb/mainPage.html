@@ -14,6 +14,14 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
         integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
+         <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    crossorigin="anonymous">
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="style.css">
 
 </head>
@@ -33,16 +41,12 @@
 
 
 
+ <div class="container-fluid mt-3">
+    <div class="row">
 
-    <div class="container">
-
-
-
-        <!-- MAP FIRST (LEFT SIDE) -->
-        <div id="map"></div>
-
-        <!-- WEATHER CARD SECOND (RIGHT SIDE) -->
-
+        <div class="col-md-3">
+    
+    <div class="weather-box mb-3">
         <div id="weatherCard">
 
             <h1>StepSense</h1>
@@ -53,6 +57,19 @@
     <button id="getWeatherBtn" onclick="getWeather()">Get Weather</button>
 </div>
 </div>
+</div>
+</div>
+
+      <div class="col-md-9">
+
+
+
+        <!-- MAP FIRST (LEFT SIDE) -->
+        <div id="map"></div>
+         </div>
+
+        <!-- WEATHER CARD SECOND (RIGHT SIDE) -->
+
 
     </div>
 

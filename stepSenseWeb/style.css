@@ -2,14 +2,14 @@ body {
     font-family: 'Poppins', Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: linear-gradient(to bottom right, #ffffff, #64ffb7);
+    background: #66ac5379;
     color: #083d1a;
 }
 
 /* NAVBAR */
 .navbar {
     width: 100%;
-    background: linear-gradient(to bottom right, #ffffff, #25b471);
+     background:linear-gradient(135deg, #ffffff , #66BB6A, #2E7D32);
     backdrop-filter: blur(12px);
     padding: 18px 32px;
     display: flex;
@@ -17,7 +17,7 @@ body {
     position: fixed;
     top: 0;
     z-index: 999;
-    border-bottom: 1.5px solid rgba(40, 168, 105, 0.4);
+   box-shadow: 0 3px 8px rgba(0,0,0,0.2);
 }
 
 .company {
@@ -36,14 +36,16 @@ body {
 
 /* MAIN LAYOUT */
 .container {
-    display: flex;
-    gap: 25px;
     padding: 120px 40px;
+}
+.container-fluid.mt-3 {
+    padding: 120px 40px;
+    padding-top: 140px; 
 }
 
 /* MAP */
 #map {
-    flex: 2;
+
     height: 620px;
     border-radius: 14px;
     box-shadow: 0 6px 16px rgba(5, 68, 26, 0.812);
@@ -51,23 +53,29 @@ body {
 
 /* WEATHER CARD */
 #weatherCard {
-     flex: 1;
+   
      background: #ffffff;
      padding: 20px;
      border-radius: 10px;
      box-shadow: 0 4px 12px rgba(46, 125, 50, 0.793);
      height: fit-content;
-     display: flex;
-     flex-direction: column;
-     align-items: center;
+      width: 100%;
  }
 
+#weatherContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
 #weatherCard h1 {
+     word-wrap:break-word;
     font-size: 32px;
     font-weight: 700;
     color: #047d3d;
     margin-bottom: 8px;
+     text-align: center;
+    width: 100%;
 }
 
 .subtitle {
@@ -97,11 +105,13 @@ button:hover {
 
 /* WEATHER RESULT TEXT */
 #weatherResult h2 {
+    
     margin-bottom: 10px;
     color: #047d3d;
 }
 
 #weatherResult p {
+    
     margin: 6px 0;
     font-size: 15px;
 }
