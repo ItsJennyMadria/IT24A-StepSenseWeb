@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StepSense Co.</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+         <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    crossorigin="anonymous">
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+
+    <header>
+        <nav class="navbar">
+            <div class="company">
+                <img src="assets/logo.png" alt="StepSense Logo" class="logo">
+                StepSense Co.
+            </div>
+        </nav>
+    </header>
+
+
+
+
+ <div class="container-fluid mt-3">
+    <div class="row">
+
+        <div class="col-md-3">
+    
+    <div class="weather-box mb-3">
+        <div id="weatherCard">
+
+            <h1>StepSense</h1>
+
+            <p style="text-align: center;"><em>Check the weather and decide if it’s an adventure day!</em></p>
+            <div id="weatherContainer" style="text-align:center;">
+    <div id="weatherResult"></div>
+    <button id="getWeatherBtn" onclick="getWeather()">Get Weather</button>
+</div>
+</div>
+</div>
+</div>
+
+      <div class="col-md-9">
+
+
+
+        <!-- MAP FIRST (LEFT SIDE) -->
+        <div id="map"></div>
+         </div>
+
+        <!-- WEATHER CARD SECOND (RIGHT SIDE) -->
+
+
+    </div>
+
+    <script>
+
+        // ---------------------- MAP SECTION ---------------------->
+
+        let map;
+        let cityMarker = null;
+
+        function initMap(mapDataUrl) {
+            map = L.map('map').setView([12.489382905214779, 123.06204968450204], 5);
+
+
+            const satellite = L.tileLayer(
+                'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+                { attribution: 'Tiles (c) Esri - Source: Esri, Maxar, Earthstar Geographics, GIS User Community' }
+            );
+
+
+            satellite.addTo(map);
+            const markerGroups = {};
+
+            fetch(mapDataUrl)
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(pin => {
+                        const type = pin.locationType || "Other";
+
+                        if (!markerGroups[type]) {
+                            markerGroups[type] = L.layerGroup();
+                        }
+
+                        const marker = L.marker([pin.lat, pin.lng]).addTo(map);
+                        const img = `<img src="${pin.img}" class="popup-image">`;
+
+                        marker.bindPopup(`${img}<br><b>${pin.title}</b><br>${pin.description}<br>${pin.locationType}`);
+
+                        markerGroups[type].addLayer(marker);
+                    });
+
+                    Object.values(markerGroups).forEach(group => group.addTo(map));
+
+                    L.control.layers(
+                        {
+                            "OpenStreetMap": openStreetMap,
+                            "Satellite": satellite
+                        },
+                        markerGroups,
+                        { collapsed: false }
+                    ).addTo(map);
+                })
+                .catch(err => console.error("Error loading JSON", err));
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            initMap("stepSense.json");
+        });
+
+
+        //---------------------- WEATHER SECTION ---------------------->
+
+        const apiKey = "71f1476d46775282b461831e0cef5202";
+        const geocodeUrl = "https://api.openweathermap.org/geo/1.0/direct";
+
+        function isGoodForRunning(data) {
+            const temp = data.main.temp;
+            const wind = data.wind.speed;
+            const humidity = data.main.humidity;
+            const condition = (data.weather && data.weather[0] && data.weather[0].main) ? data.weather[0].main.toLowerCase() : "";
+
+            if (condition.includes("storm") || condition.includes("rain") || condition.includes("thunder")) {
+                return "Not Safe: Weather conditions are not ideal for running.";
+            }
+
+            if (temp > 32) return "It's really hot right now — maybe wait a bit before heading out.";
+            if (temp < 10) return "It’s chilly outside — it might not be ideal for a walk or run.";
+            if (wind > 10) return "Pretty windy out there — outdoor plans may feel uncomfortable.";
+            if (humidity > 85) return "The air is very humid — expect a bit of discomfort outside.";
+
+            return "Lovely weather! A nice time to step out for a walk or run.";
+        }
+
+
+        async function getWeather() {
+            const city = prompt("Enter the city you're at: ");
+            if (!city) return alert("No city entered.");
+
+            const weatherUrl =
+                `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+
+            try {
+                const response = await fetch(weatherUrl);
+                if (!response.ok) throw new Error("City not found.");
+                const data = await response.json();
+
+                document.getElementById("weatherResult").innerHTML = `
+            <h2>${data.name}, ${data.sys.country}</h2>
+            <p><b>Temperature:</b> ${data.main.temp}°C</p>
+            <p><b>Weather:</b> ${data.weather[0].description}</p>
+            <p><b>Humidity:</b> ${data.main.humidity}%</p>
+            <p><b>Wind:</b> ${data.wind.speed} m/s</p>
+            <hr>
+            <h3>${isGoodForRunning(data)}</h3>
+        `;
+               const container = document.getElementById("weatherContainer");
+        const btn = document.getElementById("getWeatherBtn");
+        container.appendChild(btn);
+
+                const geoResponse = await fetch(`${geocodeUrl}?q=${city}&limit=1&appid=${apiKey}`);
+                const geoData = await geoResponse.json();
+                if (geoData.length === 0) return alert("Location not found.");
+
+                const lat = geoData[0].lat;
+                const lon = geoData[0].lon;
+
+                if (cityMarker) map.removeLayer(cityMarker);
+
+                cityMarker = L.marker([lat, lon]).addTo(map)
+                    .bindPopup(`<b>${city}</b><br>You are here!`)
+                    .openPopup();
+
+                map.setView([lat, lon], 20);
+
+            } catch (error) {
+                alert("Error: " + error.message);
+            }
+
+        }
+
+    </script>
+
+    
+
+</body>
+
+</html>
